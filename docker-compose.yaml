@@ -1,0 +1,19 @@
+version: '3.0'
+
+services:
+  grafana:
+    container_name: 'grafana-appwithserviceaccount-app'
+    build:
+      context: ./.config
+      args:
+        grafana_version: ${GRAFANA_VERSION:-11.1.0}
+    ports:
+      - 3000:3000/tcp
+    environment:
+      - GF_FEATURE_TOGGLES_ENABLE=externalServiceAccounts
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_DATABASE_PATH=/srv/grafana-appwithserviceaccount-app/grafana.db
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/grafana-appwithserviceaccount-app
+      - ./provisioning:/etc/grafana/provisioning
+      - ./:/srv/grafana-appwithserviceaccount-app

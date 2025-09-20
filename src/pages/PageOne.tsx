@@ -25,7 +25,7 @@ export function PageOne() {
   const { error, loading, value } = useAsync(() => {
     return Promise.all([backendSrv.get(`api/plugins/grafana-appwithserviceaccount-app/health`)]);
   });
-  const [apiPath, setApiPath] = useState('/dashboards/uid/dduph2kfqnrb4c');
+  const [apiPath, setApiPath] = useState('/api/dashboards/uid/new-dashboard');
   const [apiResponse, setApiResponse] = useState({});
   const [apiToken, setApiToken] = useState('');
   const [method, setMethod] = useState('GET');
@@ -57,7 +57,7 @@ export function PageOne() {
       params = { ...params, body: JSON.stringify(parsedBody) };
     }
     backendSrv
-      .get(`api/plugins/grafana-appwithserviceaccount-app/resources/api${apiPath}`, params)
+      .get(`api/plugins/grafana-appwithserviceaccount-app/resources${apiPath}`, params)
       .then((response) => {
         setApiResponse(response.results);
         setApiToken(response.token);

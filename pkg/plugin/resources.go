@@ -94,5 +94,5 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 
 // registerRoutes takes a *http.ServeMux and registers some HTTP handlers.
 func (a *App) registerRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/api/", a.handleAPI)
+	mux.HandleFunc("/", a.handleAPI)
 }

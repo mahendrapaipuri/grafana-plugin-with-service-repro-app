@@ -28,6 +28,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	cfg := backend.GrafanaConfigFromContext(req.Context())
 	grafanaAppURL, err := cfg.AppURL()
 	if err != nil {
+		ctxLogger.Error("failed to fetch Grafana App URL", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -37,7 +38,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	ctxLogger.Info("request", "url", reqURL)
+	ctxLogger.Info("making request to Grafana", "url", reqURL)
 	proxyReq, err := http.NewRequest(proxyMethod, reqURL, bodyReader)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -50,6 +51,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 
 	saToken, err := cfg.PluginAppClientSecret()
 	if err != nil {
+		ctxLogger.Error("failed to fetch plugin app client secret", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -57,6 +59,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 
 	res, err := a.httpClient.Do(proxyReq)
 	if err != nil {
+		ctxLogger.Error("failed to make request to Grafana API", "error", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
